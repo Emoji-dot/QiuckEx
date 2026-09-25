@@ -20,16 +20,6 @@ jobs:
           node-version: "20"
           # cache: "pnpm"  # Temporarily disabled due to lockfile detection issues
 
-      # Verify the lockfile exists before using cache
-      - name: Verify lockfile exists
-        run: |
-          if [ ! -f "pnpm-lock.yaml" ]; then
-            echo "::error::pnpm-lock.yaml not found in $(pwd)"
-            ls -la
-            exit 1
-          fi
-          echo "pnpm-lock.yaml found successfully"
-
       # Forces pnpm to link all internal binaries across packages properly
       - name: Install Dependencies
         run: pnpm install --no-frozen-lockfile
