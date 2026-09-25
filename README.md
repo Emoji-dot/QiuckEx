@@ -193,6 +193,7 @@ Contributions are welcome and encouraged to help evolve QuickEx! To get started:
   - Use `pnpm turbo run build` to validate changes across packages.
   - Update shared packages (`packages/ui` or `packages/stellar-sdk`) only when needed, and bump versions.
   - Run `pnpm turbo run lint --filter=...` for targeted checks (e.g., `--filter=app/frontend`).
+- **Feature Flags**: Before adding, changing, or removing a feature flag or kill switch, read [docs/FEATURE-FLAGS.md](docs/FEATURE-FLAGS.md). It covers naming, review rules for high-risk mainnet flags, and cleanup. See [docs/CAPABILITY-MAP.md](docs/CAPABILITY-MAP.md) for which flows are live, mocked, partial, or flag-gated.
 
 All contributors must adhere to the [Code of Conduct](CODE_OF_CONDUCT.md) and sign off commits for DCO compliance. For more, see [CONTRIBUTING.md](CONTRIBUTING.md).
 
