@@ -1,8 +1,10 @@
 //! Tests for the stealth address PoC (Issue #157 – Privacy v2).
 
 use crate::{
-    errors::QuickexError, stealth, types::{FeeConfig, StealthDepositParams}, EscrowStatus, QuickexContract,
-    QuickexContractClient,
+    errors::QuickexError,
+    stealth,
+    types::{FeeConfig, StealthDepositParams},
+    EscrowStatus, QuickexContract, QuickexContractClient,
 };
 use soroban_sdk::{
     testutils::{Address as _, Ledger},
@@ -493,7 +495,13 @@ fn test_stealth_withdraw_collects_platform_fee() {
     let final_recipient_balance = token_client.balance(&recipient);
     let final_collector_balance = token_client.balance(&fee_collector);
 
-    assert_eq!(final_recipient_balance - initial_recipient_balance, expected_payout);
-    assert_eq!(final_collector_balance - initial_collector_balance, expected_fee);
+    assert_eq!(
+        final_recipient_balance - initial_recipient_balance,
+        expected_payout
+    );
+    assert_eq!(
+        final_collector_balance - initial_collector_balance,
+        expected_fee
+    );
     assert!(expected_fee > 0, "Fee should be nonzero for this test");
 }
