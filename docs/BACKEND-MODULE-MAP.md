@@ -166,7 +166,7 @@ Each entry states what the module owns, its layer, its externally served route p
 
 **`soroban-tooling`** — *Active. `developer/testnet`.* Owns testnet developer conveniences: contract deployment helpers and friendbot-style account funding. Testnet-only by construction — nothing here should ever be reachable on mainnet.
 
-**`manifests`** — *Unwired. Would serve `manifests`.* Owns structural diffing of environment manifests — contracts, URLs, and feature flags — producing a per-key `added | removed | modified | unchanged` diff. **`ManifestsModule` is not imported anywhere.** The diff algorithm is pure and self-contained; only the wiring is missing.
+**`manifests`** — *Active. `POST /manifests/diff`.* Owns structural diffing of environment manifests — contracts, URLs, and feature flags — producing a per-key `added | removed | modified | unchanged` diff. The diff algorithm is pure and self-contained; `ManifestsModule` is registered in `app.module.ts`, so the route is served and covered by a boot-time test.
 
 **`crash-reporting`** — *Unwired. Would serve `crash-reporting`.* Owns opt-in client crash and log capture: a crash-capture filter, a bounded rolling log buffer, strict redaction of secrets and PII, issue submission, and per-user settings. **`CrashReportingModule` is not imported anywhere**, and the feature is disabled by default even when wired.
 
@@ -252,7 +252,6 @@ Modules that are **not fully wired** — do not build on these without wiring th
 | Module | Status | Consequence |
 |---|---|---|
 | `receipts` | Unwired — `ReceiptsModule` imported nowhere | `/v1/receipts` is not served. Normaliser and schema are complete. |
-| `manifests` | Unwired — `ManifestsModule` imported nowhere | `/manifests` is not served. The diff algorithm is pure and usable as a library today. |
 | `crash-reporting` | Unwired — `CrashReportingModule` imported nowhere | `/crash-reporting` is not served; also opt-in and off by default. |
 | `demos` | Unwired — `DemoModule` imported nowhere | `/v1/demo` and `/seed-reset` are **not served**, despite complete controllers, guards, and scheduler. |
 | `reconciliation` | Conditional | Skipped when `SUPABASE_URL` points at localhost or 127.0.0.1. Drift detection does not run locally. |
@@ -269,6 +268,6 @@ Modules that are **intentionally thin** — small on purpose, and not the place 
 | `payments` | A single Horizon read with `since`/`limit` filtering. Despite the name it owns no payment domain logic — that lives in `links`, `transactions`, and `refunds`. |
 | `dashboard-feed` | One endpoint. Deliberately an aggregator over other modules' repositories with no state of its own. |
 | `types` | Ambient declarations only. Never add runtime code. |
-| `manifests` | A pure diff function and a DTO. Correct as-is; it just needs wiring. |
+| `manifests` | A pure diff function and a DTO. Correct as-is — now wired into `app.module.ts`; it should not grow domain logic. |
 | `soroban-tooling` | Two testnet helpers. Must never grow a mainnet path. |
 | `developer` | A convenience layer over `api-keys` and `notifications`. Should not acquire its own persistent state. |
