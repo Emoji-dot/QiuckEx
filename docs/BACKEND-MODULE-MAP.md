@@ -116,7 +116,7 @@ Each entry states what the module owns, its layer, its externally served route p
 
 **`refunds`** — *Active. `admin/refunds`.* Owns refund eligibility and initiation: the eligibility rules for payments and escrows, reason codes, and the admin-initiated refund path, gated by feature flags and written to the audit log. Eligibility logic lives in `refunds.eligibility.ts` and is the single place that decides whether something is refundable.
 
-**`receipts`** — *Unwired. Would serve `v1/receipts`.* Owns the normalised payment receipt: it orchestrates Horizon, Soroban RPC, and indexer metadata, then normalises them into a stable receipt schema with a content hash for tamper evidence. **`ReceiptsModule` is not imported anywhere**, so `/v1/receipts` is not served. The normaliser and schema are complete; only the wiring is missing.
+**`receipts`** — *Unwired. Would serve `v1/receipts`.* Owns the normalised payment receipt: it orchestrates Horizon, Soroban RPC, and indexer metadata, then normalises them into a stable receipt schema with a content hash for tamper evidence. **`ReceiptsModule` is not imported anywhere**, so `/v1/receipts` is not served — that prefix is grandfathered rather than exemplary; see [Routing Conventions](./ROUTING-CONVENTIONS.md). The normaliser and schema are complete; only the wiring is missing.
 
 **`fiat-ramps`** — *Active. `fiat-ramps`.* Owns the SEP-24 deposit/withdraw integration: anchor discovery via the SEP-1 TOML, SEP-10 authentication, interactive SEP-24 initiation, the transaction repository, and status polling — both the in-process poller and the `sep24_status_poll` job handler. It uses `IdempotencyModule` so a retried initiation does not open two anchor sessions.
 
@@ -154,7 +154,7 @@ Each entry states what the module owns, its layer, its externally served route p
 
 **`rc-validation`** — *Active. `admin/rc-validation`.* Owns the release-candidate gate: it aggregates smoke and readiness probes, contract-registry completeness, indexer lag, and environment parity into classified blockers with an overall `releaseReady` flag. `GET /admin/rc-validation/report` is step 0 of the [release readiness checklist](../RELEASE_READINESS_CHECKLIST.md).
 
-**`environment-parity`** — *Active. `api/environment-parity`.* Owns detection of configuration drift between environments — endpoints, versions, and feature flags — plus staging seed data and the shadow-traffic middleware that mirrors production-shaped requests at staging. Records `environment_parity_check_results` and `shadow_traffic_requests_total`.
+**`environment-parity`** — *Active. `environment-parity`.* Owns detection of configuration drift between environments — endpoints, versions, and feature flags — plus staging seed data and the shadow-traffic middleware that mirrors production-shaped requests at staging. Records `environment_parity_check_results` and `shadow_traffic_requests_total`.
 
 **`branch-preview`** — *Active.* Owns per-branch preview environment records: registration, cached lookup of a branch's API and frontend URLs, network and contract version, and the auto-expiry policy that reclaims stale previews. Falls back to configured defaults when a branch has no registration.
 
